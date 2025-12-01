@@ -117,7 +117,7 @@ const ConnexionUser = async (req, res) => {
 
 const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-console.log('Token généré:', token);
+
 
     return res.status(200).json({
       message: "Connexion réussie",

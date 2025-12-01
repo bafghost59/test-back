@@ -41,10 +41,10 @@ const getTasksWithUsers = async (req, res) => {
 
 const getTasksByUserId = async (req, res) => {
   const { userId } = req.params;
-    console.log("getTasksByUserId - userId (param):", userId);
+
   try {
     const tasks = await taskModel.fetchTasksByUserId(userId);
-    console.log("getTasksByUserId - tasks from DB:", tasks);
+
     res.status(200).json(tasks);
   } catch (error) {
     console.error("Erreur lors de la récupération des tâches par userId:", error);
@@ -84,21 +84,53 @@ const createTask = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const id = req.params.id;
+
+
+
     const { title, description, status, priority, due_date, user_id } = req.body;
-    const result = await taskModel.updateTask(id, title, description, status, priority, due_date, user_id);
-    if (result === 0) {
-      res.status(404);
-      res.json({ message: "Tâche non trouvée." });
-    } else {
-      res.status(200);
-      res.json({ message: "Tâche mise à jour." });
+
+
+    const existing = await taskModel.fetchTaskById(id);
+
+    if (!existing) {
+      return res.status(404).json({ message: "Tâche non trouvée." });
     }
+
+  
+    const newTitle = title ?? existing.title;
+    const newDescription = description ?? existing.description;
+    const newStatus = status ?? existing.status;
+    const newPriority = priority ?? existing.priority;
+    const newDueDate = due_date ?? existing.due_date;
+    const newUserId = user_id ?? existing.user_id;
+
+
+ 
+    const result = await taskModel.updateTask(
+      id,
+      newTitle,
+      newDescription,
+      newStatus,
+      newPriority,
+      newDueDate,
+      newUserId
+    );
+
+
+
+
+    if (result === 0) {
+      return res.status(404).json({ message: "Tâche non trouvée." });
+    }
+
+    res.status(200).json({ message: "Tâche mise à jour." });
   } catch (error) {
-    console.error(error);
-    res.status(500);
-    res.json({ message: "Erreur serveur lors de la mise à jour de la tâche." });
+    console.error("Erreur updateTask:", error);
+    res.status(500).json({ message: "Erreur serveur lors de la mise à jour de la tâche." });
   }
-}
+};
+
+
 
 const deleteTask = async (req, res) => {
     try {

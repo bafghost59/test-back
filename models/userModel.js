@@ -25,7 +25,7 @@ const getUserById = async (id) => {
         WHERE id = ?;
     `;
     const [response] = await bdd.query(selectUserById, [id]);
-    return response[0]; // retour d'un seul utilisateur
+    return response[0]; 
 };
 
 const getUserByEmail = async (email) => {
