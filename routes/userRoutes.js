@@ -12,7 +12,7 @@ router.get('/users/info', verifyToken, userController.getInfoUser);
 
 router.get('/users/:id', verifyToken, userController.getUserById);
 
-router.post('/users/email', verifyToken, userController.getUserByEmail); 
+router.post('/users/resetPassword', userController.getUserByEmail);
 
 router.post('/users', userController.addUser);
 
@@ -23,5 +23,6 @@ router.delete('/users/:id', verifyToken, userController.deleteUser);
 router.post('/users/login', userController.ConnexionUser);
 
 router.post('/deconnexionUser', userController.DeconnexionUser)
+
 
 export default router;
